@@ -667,4 +667,35 @@ el('new').onclick=()=>{if(confirm('Të nisë një kampionat i ri?'))newGame()};
 el('next').onclick=()=>{state.round++;el('next').style.display='none';prepareCut(false)};
 newGame();
 
-</script></body></html>
+</script>
+ <!-- Firebase Multiplayer -->
+<script type="module">
+  import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+  import { getAuth, signInAnonymously } from
+    "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+  import { getDatabase } from
+    "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCQJNT7TjyG3TnOvyTUJqwccFFLfXYL8SU",
+    authDomain: "murlan-online.firebaseapp.com",
+    databaseURL: "https://murlan-online-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "murlan-online",
+    storageBucket: "murlan-online.firebasestorage.app",
+    messagingSenderId: "443806405627",
+    appId: "1:443806405627:web:d4d3cd26f2e86d570cf15e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+
+  signInAnonymously(auth)
+    .then(() => console.log("Firebase connected"))
+    .catch(error => console.error("Firebase error:", error));
+</script>
+</body>
+</html>
