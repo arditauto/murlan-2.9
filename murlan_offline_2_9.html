@@ -1,0 +1,670 @@
+<!doctype html><html lang="sq"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Murlan – prototip 0.9</title><style>
+:root{color-scheme:dark;--bg:#031c16;--panel:#082e24;--felt:#07583d;--gold:#e6c16b;--text:#f9f1df;--muted:#b2c6ba}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#124d3b,#02140f 75%);font:15px system-ui,-apple-system,sans-serif;color:var(--text);min-height:100dvh}header{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #8a6a3266;background:#002018}.logo{font:700 26px Georgia,serif;color:var(--gold)}button{cursor:pointer;font:inherit;border-radius:12px;padding:10px 14px;border:1px solid #9b7a44;background:linear-gradient(#b99a55,#7b5a25);color:#fff9e9;font-weight:700}button:disabled{opacity:.42;cursor:not-allowed}.secondary{background:#063525;border-color:#58826a}.layout{max-width:1100px;margin:auto;padding:10px}.notice{text-align:center;color:#e2d2a6;min-height:46px;padding:9px}.table{position:relative;height:min(58dvh,470px);min-height:310px;border:9px solid #916631;border-radius:48% / 42%;box-shadow:0 0 0 3px #e9bc63, inset 0 0 90px #032d1d, 0 20px 65px #0008;background:radial-gradient(ellipse,#08794e 0,#07583b 50%,#043c2b 100%);margin:15px 0}.player{position:absolute;text-align:center;padding:6px 10px;border-radius:16px;background:#00271fdc;min-width:106px;border:1px solid #a07f4c}.player.current{outline:2px solid #ffe087;box-shadow:0 0 12px #ffe0857a}.player .count{font-size:12px;color:#d7cda8}.p0{bottom:3%;left:50%;transform:translateX(-50%)}.p1{left:-2%;top:42%}.p2{top:-5%;left:50%;transform:translateX(-50%)}.p3{right:-2%;top:42%}.center{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);text-align:center;width:65%}.pile{position:relative;height:136px;max-width:100%;margin:4px auto;overflow:visible;isolation:isolate;pointer-events:none}.pile:empty:after{content:"Tavolinë e lirë";color:#c9ddc4;position:absolute;top:47%;left:50%;transform:translate(-50%,-50%);white-space:nowrap}.pile .thrown{position:absolute;left:50%;top:50%;width:39px;height:57px;display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1.08;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(var(--rot));background:#fffdf9;color:#1b2321;border:1px solid #e4d9c8;border-radius:5px;box-shadow:0 2px 5px #001d1a88;font-size:14px;font-weight:900;transition:none}@keyframes cardToss{0%{opacity:.65;transform:translate(calc(-50% + var(--from-x)),calc(-50% + var(--from-y))) rotate(var(--from-rot)) scale(1.12);filter:drop-shadow(0 8px 9px #0009)}65%{opacity:1;filter:drop-shadow(0 11px 6px #0008)}85%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y) - 7px)) rotate(calc(var(--rot) - 5deg)) scale(1.035)}100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(var(--rot)) scale(1)}}.pile .thrown.toss{animation:cardToss .48s cubic-bezier(.18,.68,.23,1) both;animation-delay:var(--delay,0ms)}@media(prefers-reduced-motion:reduce){.pile .thrown.toss{animation:none}}.pile .thrown.newest{outline:1px solid #f1cb79;box-shadow:0 2px 9px #001c15a6}.pile .thrown.joker{font-size:9px;letter-spacing:-.3px}.pile .thrown .joker-symbol{font-size:17px}.pile .thrown .card-suit{font-size:18px}.pile .thrown.red{color:#bc1e29}.mini{width:46px;height:67px;background:#fffdf9;color:#1d1d1d;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 5px #0006;padding:7px 2px;font-weight:800;font-size:21px}.red{color:#bf1d25}.hud{color:#d3e3cf;font-size:13px}.hand{display:flex;justify-content:center;align-items:flex-end;flex-wrap:wrap;gap:4px;min-height:103px;margin:0 auto;max-width:1000px}.card{width:54px;height:88px;background:#fffcf5;color:#171717;border:2px solid #e8d4b1;box-shadow:0 3px 6px #0008;border-radius:7px;font-size:17px;font-weight:800;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:5px;transition:transform .12s}.card .suit{font-size:23px;align-self:center}.card.selected{transform:translateY(-15px);border-color:#e7b439;box-shadow:0 0 0 2px #f4cd74,0 4px 8px #0008}.card.red{color:#b71923}.card.joker{background:linear-gradient(145deg,#fffdf7,#f4e9cb);font-size:11px;letter-spacing:.1px;align-items:center;justify-content:center;gap:3px}.card.joker .suit{font-size:29px}.card.joker .joker-kind{font-size:10px;font-weight:900}.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:12px auto 20px}.stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:12px;background:#042d21;border:1px solid #658252;border-radius:12px}.stats b{color:#f0ce7e}.log{font-size:13px;color:#d5ddc9;max-height:125px;overflow-y:auto;padding:8px 12px}.pill{border:1px solid #a2854a;border-radius:20px;padding:5px 9px;color:#e8c780}footer{font-size:12px;color:#9bb7a4;text-align:center;padding:18px}@media(max-width:580px){.layout{padding:6px}.table{height:44dvh;min-height:290px;border-width:6px;margin:18px 14px 13px}.player{font-size:12px;min-width:72px;padding:4px}.p1{left:-5%}.p3{right:-5%}.card{width:39px;height:72px;font-size:14px;padding:3px}.card .suit{font-size:20px}.mini{width:36px;height:57px;font-size:16px;padding:3px}.pile{height:120px}.pile .thrown{width:31px;height:47px;font-size:12px}.pile .thrown .card-suit{font-size:15px}.pile .thrown.joker{font-size:8px}.hand{gap:2px}.logo{font-size:21px}.notice{font-size:13px}}
+
+.timerbar{height:7px;background:#062d21;border-radius:10px;overflow:hidden;border:1px solid #53765a;margin:6px 0}.timerfill{height:100%;width:100%;background:linear-gradient(90deg,#e2b856,#fff1a8);transition:width .2s linear}.timerlabel{font-variant-numeric:tabular-nums;color:#f4d17c;font-weight:800}.exchange-panel{margin:12px 0;padding:13px;background:#104431;border:1px solid #dbbf71;border-radius:14px;display:none}.exchange-panel.show{display:block}.exchange-panel button{margin:4px}.exchange-note{color:#e7d99f;font-size:13px}.stats{align-items:center}.table{overflow:visible}.pile .thrown{transform-origin:center center}.log{max-height:130px}.round-tag{font-size:12px;color:#f3d68d;margin:4px}.notice{min-height:38px}.card:focus-visible{outline:3px solid #fad467;outline-offset:2px}
+@media(max-width:580px){.exchange-panel{padding:9px}.exchange-panel button{padding:7px 9px}.timerlabel{font-size:12px}}
+
+.exchange-stage{position:absolute;top:49%;left:50%;transform:translate(-50%,-50%);z-index:900;width:min(92%,460px);padding:13px 10px 10px;background:linear-gradient(165deg,#103c2fef,#052319f7);border:2px solid #e6c16b;border-radius:17px;box-shadow:0 14px 40px #001a14ed;text-align:center;display:none;pointer-events:none}
+.exchange-stage.visible{display:block}.exchange-title{font-weight:900;color:#f4d27e;font-size:13px;letter-spacing:.6px}.exchange-pair{display:flex;align-items:center;justify-content:center;gap:16px;margin:10px auto}.exchange-move{min-width:115px;display:flex;flex-direction:column;align-items:center;gap:8px}.exchange-person{font-size:12px;font-weight:700;color:#eee2b6}.exchange-card{width:65px;height:91px;background:#fffdf7;color:#172521;border:2px solid #e4cb89;border-radius:7px;box-shadow:0 4px 12px #000b;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:20px;animation:exchangeFly .44s cubic-bezier(.2,.8,.2,1) both}.exchange-card.red{color:#bb1728}.exchange-card .card-suit{font-size:28px}.exchange-card .joker-symbol{font-size:23px}.exchange-card span:first-child{font-size:15px}.exchange-arrow{font-size:27px;color:#f4d27e}.exchange-bottom{font-size:12px;color:#e1dfc6;min-height:19px}@keyframes exchangeFly{from{opacity:.15;transform:translateY(-30px) rotate(-17deg) scale(.8)}to{opacity:1;transform:translateY(0) rotate(-3deg) scale(1)}}@media(max-width:580px){.exchange-stage{width:90%;padding:10px 6px}.exchange-move{min-width:90px}.exchange-title{font-size:11px}.exchange-card{width:55px;height:76px}}
+.pile .thrown.older{opacity:.68;filter:brightness(.85)}
+.pile .thrown.newest{outline:2px solid #ffe7a1;box-shadow:0 3px 15px #000b,0 0 10px #ffe48a88;opacity:1;filter:none}
+@media(max-width:580px){.pile .thrown.newest{width:36px;height:54px;font-size:13px}.pile .thrown.newest .card-suit{font-size:18px}}
+.pile .thrown{transition:transform .42s ease,opacity .4s ease,filter .4s ease;will-change:transform}
+.pile .thrown.older{opacity:.62;filter:brightness(.78)}
+.pile .thrown.newest{width:45px;height:66px;font-size:17px;border:2px solid #f3cf7b;box-shadow:0 5px 16px #001a15d9,0 0 13px #ffe18c7a;opacity:1;filter:none}
+.pile .thrown.newest .card-suit{font-size:23px}
+@media(max-width:580px){.center{width:86%}.pile{height:135px}.pile .thrown.newest{width:43px;height:64px;font-size:16px}.pile .thrown.newest .card-suit{font-size:22px}}
+.hand .card{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:grab}
+.hand .card.dragging{opacity:.38;outline:2px dashed #f5d18a}
+.hand .card.drop-target{outline:3px solid #f4d27e;outline-offset:2px}
+.drag-ghost{position:fixed!important;z-index:99999!important;pointer-events:none!important;opacity:.96;transform:rotate(-5deg) scale(1.08)!important;box-shadow:0 12px 25px #0009!important}
+.hand .card.drop-target{outline:3px solid #ffe18b;outline-offset:3px}
+.drag-ghost{position:fixed!important;touch-action:none!important}
+
+/* Offline 2.9: one horizontal row with visible top-left rank on every overlapping card */
+.hand{display:flex;flex-wrap:nowrap;justify-content:flex-start;align-items:flex-end;overflow-x:auto;overflow-y:visible;min-height:115px;max-width:100%;padding:20px 8px 9px;gap:0;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.hand .card{flex:0 0 54px;width:54px;height:84px;margin-left:-25px;position:relative;overflow:hidden;align-items:flex-start;justify-content:flex-start;font-size:26px;line-height:1;font-weight:900;padding:5px 3px;touch-action:none}
+.hand .card:first-child{margin-left:0}
+.hand .card .suit{font-size:17px;align-self:flex-start;line-height:1.1}
+.hand .card.selected{transform:translateY(-12px);z-index:2}
+.hand .card.joker{font-size:12px;justify-content:flex-start;align-items:flex-start}
+.hand .card.joker .suit{font-size:20px}
+@media(max-width:580px){.hand{min-height:105px;padding:16px 4px 8px}.hand .card{flex-basis:46px;width:46px;height:77px;margin-left:-23px;font-size:25px;padding:4px 2px}.hand .card .suit{font-size:16px}}
+
+/* 1.5: curved, responsive hand fan. Every card's full rank stays legible. */
+.hand{position:relative!important;display:block!important;overflow:visible!important;height:135px!important;min-height:135px!important;width:100%!important;max-width:900px!important;padding:0!important;margin:7px auto 0!important;touch-action:pan-y}
+.hand .card{position:absolute!important;left:0;top:0;width:60px!important;height:106px!important;min-width:0!important;flex:none!important;margin:0!important;padding:5px 3px!important;border-radius:9px!important;overflow:visible!important;display:flex!important;align-items:flex-start!important;justify-content:flex-start!important;gap:1px!important;font-size:25px!important;line-height:1!important;letter-spacing:-1px;transform-origin:50% 100%;transform:translate(var(--fx),var(--fy)) rotate(var(--fa));z-index:var(--fz);transition:box-shadow .14s ease}
+.hand .card>span:first-child{display:block;white-space:nowrap;min-width:31px;text-align:left;font-size:25px;font-weight:950;letter-spacing:-1px}
+.hand .card .suit{font-size:19px!important;align-self:flex-start!important;margin-left:2px}
+.hand .card.selected{transform:translate(var(--fx),calc(var(--fy) - 34px)) rotate(var(--fa))!important;border-color:#f3c65d!important;box-shadow:0 0 0 2px #f3cf70,0 7px 12px #0009!important;z-index:var(--fz)!important}
+.hand .card.joker{align-items:flex-start!important;justify-content:flex-start!important;gap:1px!important}
+.hand .card.joker>span:first-child{font-size:12px!important;letter-spacing:-.5px;min-width:0}
+.hand .card.joker .suit{font-size:19px!important}
+.hand .card.joker .joker-kind{font-size:10px!important}
+.hand .card.dragging{opacity:.35}
+.hand .card.drop-target{outline:3px solid #f6d67d}
+.drag-ghost{transform:rotate(-4deg) scale(1.07)!important;z-index:99999!important}
+@media(max-width:580px){.hand{height:128px!important;min-height:128px!important}.hand .card{width:57px!important;height:100px!important;font-size:24px!important}.hand .card>span:first-child{font-size:24px!important}}
+ 
+.cut-overlay{position:fixed;inset:0;z-index:100000;background:#00180fe9;display:flex;align-items:center;justify-content:center;padding:20px}
+.cut-overlay.hidden{display:none}
+.cut-panel{width:min(420px,100%);background:linear-gradient(155deg,#164a36,#07271c);border:2px solid #e6c16b;border-radius:22px;padding:23px 18px;text-align:center;box-shadow:0 20px 70px #000b}
+.cut-panel h2{margin:0 0 8px;color:#f0d28b}.cut-panel p{color:#d2e1cf}
+.deck-cut{height:160px;position:relative;margin:16px auto;max-width:260px}
+.deck-stack{position:absolute;width:84px;height:124px;top:13px;left:calc(50% - 42px);background:repeating-linear-gradient(35deg,#143d35 0 7px,#e5c575 7px 9px,#164936 9px 14px);border:4px solid #edcc80;border-radius:10px;box-shadow:4px 4px 0 #fff6df,8px 8px 0 #d3b477,12px 12px 0 #fff6df;transition:transform .5s ease}
+.deck-cut.cut .deck-stack{transform:translate(-64px,13px) rotate(-12deg)}
+.deck-cut.cut .deck-stack:after{content:"";position:absolute;inset:-4px;border:4px solid #edcc80;border-radius:10px;background:repeating-linear-gradient(35deg,#143d35 0 7px,#e5c575 7px 9px,#164936 9px 14px);transform:translate(125px,-24px) rotate(21deg);box-shadow:4px 4px 0 #fff6df}
+.cut-progress{height:8px;background:#0a281d;border-radius:20px;overflow:hidden;margin:14px 0}.cut-progress>div{height:100%;width:0;background:#e9c678;transition:width .1s}
+
+/* Compact hand fan: room reserved for profile photos and mascot. */
+.hand{height:162px!important;min-height:162px!important;overflow:visible!important;isolation:isolate}
+.hand .card{transform-origin:50% 115%!important;box-shadow:0 3px 9px #0009!important}
+.hand .card>span:first-child{font-size:27px!important;letter-spacing:-1.4px!important;min-width:35px!important}
+.hand .card .suit{font-size:20px!important}
+.hand .card.selected{transform:translate(var(--fx),calc(var(--fy) - 32px)) rotate(var(--fa))!important}
+@media(max-width:580px){.hand{height:156px!important;min-height:156px!important}.hand .card>span:first-child{font-size:26px!important}.hand .card{width:57px!important;height:102px!important}}
+ 
+/* Compact cards, fitted within iPhone viewport, with readable rank corners. */
+.hand{height:119px!important;min-height:119px!important;max-width:100%!important;overflow:visible!important}
+.hand .card{width:43px!important;height:78px!important;padding:4px 2px!important;border-radius:6px!important}
+.hand .card>span:first-child{font-size:22px!important;min-width:26px!important;letter-spacing:-1.3px!important}
+.hand .card .suit{font-size:15px!important;margin-left:1px!important}
+.hand .card.selected{transform:translate(var(--fx),calc(var(--fy) - 21px)) rotate(var(--fa))!important}
+.hand .card.joker>span:first-child{font-size:10px!important;min-width:0!important}
+.hand .card.joker .joker-kind{font-size:8px!important}
+@media(max-width:580px){.hand{height:120px!important;min-height:120px!important}.hand .card{width:43px!important;height:78px!important}.hand .card>span:first-child{font-size:22px!important}}
+.profile-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:7px 4px 10px;padding:7px 10px;background:#063125;border:1px solid #a58a5066;border-radius:14px}
+.profile-mini{display:flex;align-items:center;gap:7px;font-size:12px;color:#f3d69a}
+.profile-avatar{width:32px;height:32px;border-radius:50%;border:1px solid #bda065;display:grid;place-items:center;background:#234b3b;font-size:18px}
+.mascot-slot{border:1px dashed #9f8658;border-radius:9px;padding:6px 9px;font-size:12px;color:#d8c69c}
+
+/* Rank corners stay legible when the cards are gathered. */
+.hand .card>span:first-child{min-width:22px!important;font-size:21px!important;letter-spacing:-1.5px!important}
+.hand .card .suit{font-size:13px!important}
+/* Original illustrated court-jester joker; distinct red/black versions. */
+.joker-art{width:35px;height:42px;display:block;align-self:center;flex-shrink:0;pointer-events:none}
+.hand .card.joker{align-items:center!important;gap:0!important;padding:3px 1px!important}
+.hand .card.joker .joker-title{font-size:9px!important;letter-spacing:-.6px!important;min-width:0!important;align-self:center}
+.hand .card.joker .joker-kind{font-size:8px!important;align-self:center}
+.pile .joker-art{width:24px;height:28px}
+.exchange-card .joker-art{width:30px;height:38px}
+@media(max-width:580px){.hand .joker-art{width:30px;height:38px}}
+
+/* The cutter is the previous hand's winner; 54 cards visibly travel to seats. */
+.deal-arena{position:relative;height:210px;margin:10px auto 8px;max-width:310px;border-radius:80px;border:2px solid #c9a66a;background:radial-gradient(ellipse,#176040,#0a3426);overflow:hidden}
+.deal-seat{position:absolute;color:#f4dfae;font-size:11px;text-align:center;min-width:90px;font-weight:700}
+.deal-seat.top{top:6px;left:50%;transform:translateX(-50%)}
+.deal-seat.bottom{bottom:6px;left:50%;transform:translateX(-50%)}
+.deal-seat.left{top:50%;left:2px;transform:translateY(-50%)}
+.deal-seat.right{top:50%;right:2px;transform:translateY(-50%)}
+.deal-deck{position:absolute;left:calc(50% - 15px);top:calc(50% - 23px);width:30px;height:46px;border:2px solid #f5d58d;border-radius:5px;background:repeating-linear-gradient(45deg,#163f34 0 4px,#ddc47f 4px 6px);box-shadow:3px 3px 0 #e4d3ad}
+.deal-fly{position:absolute;left:calc(50% - 15px);top:calc(50% - 23px);width:30px;height:46px;border:2px solid #f5d58d;border-radius:5px;background:repeating-linear-gradient(45deg,#163f34 0 4px,#ddc47f 4px 6px);pointer-events:none;transition:transform .22s ease-out,opacity .22s}
+.deal-arena.hidden{display:none}
+</style></head><body><header><span class="logo">♠ MURLAN</span><span class="pill">Offline 2.9 · kundër AI</span></header><main class="layout"><div class="notice" id="notice">Po përgatitet loja…</div><div class="stats" id="stats"></div><div class="timerbar"><div class="timerfill" id="timerfill"></div></div><div style="text-align:center" class="timerlabel">Koha e radhës: <span id="clock">45s</span></div><section class="table"><div class="player p0" id="p0"></div><div class="player p1" id="p1"></div><div class="player p2" id="p2"></div><div class="player p3" id="p3"></div><div class="center"><div class="hud" id="turn"></div><div class="pile" id="pile"></div><div class="hud" id="last"></div></div><div class="exchange-stage" id="exchangeStage" aria-live="polite"></div></section><div class="exchange-panel" id="exchange"><b>🔁 Shkëmbimi pas dorës</b><div class="exchange-note" id="exchangeText"></div><button id="return">Kthe letrën e zgjedhur</button></div><div class="profile-strip"><div class="profile-mini"><span class="profile-avatar">👤</span><span>Foto e profilit<br><small>Vend i rezervuar</small></span></div><div class="mascot-slot">🐾 Maskota · së shpejti</div></div><div class="hand" id="hand"></div><div class="controls"><button id="play">Hidh letrat</button><button id="pass" class="secondary">Pass</button><button id="hint" class="secondary">Sugjero</button><button id="gather" class="secondary" title="Bashko letrat e mbetura pa ndryshuar renditjen">🃏 Bashko letrat</button><button id="sound" class="secondary" aria-pressed="true">🔊 Zëri: ON</button><button id="next" class="secondary" style="display:none">Dora tjetër</button><button id="new" class="secondary">Kampionati i ri</button></div><div class="log" id="log"></div></main><footer>Offline 2.9: kombinime dhe bomba, 45 sekonda për radhë, shkëmbimi fitues–humbës dhe AI strategjike me ruajtje të letrave të forta. Ende jo multiplayer online.</footer><div id="cutOverlay" class="cut-overlay hidden"><div class="cut-panel"><h2>🃏 Përziej dhe prit letrat</h2><p id="cutText">Letrat janë përzier. Zgjidh ku ta presim pakon.</p><div id="cutDeck" class="deck-cut"><div class="deck-stack"></div></div><div id="dealArena" class="deal-arena hidden"><div class="deal-seat top" id="seat2">Endri · 0</div><div class="deal-seat left" id="seat1">Mondi · 0</div><div class="deal-seat right" id="seat3">Albi · 0</div><div class="deal-seat bottom" id="seat0">Ti · 0</div><div class="deal-deck"></div></div><label for="cutRange">Prerja e pakos: <b id="cutAmount">27</b> letra</label><input id="cutRange" type="range" min="1" max="53" value="27" style="width:100%;accent-color:#e8c578;margin:15px 0"><div class="cut-progress"><div id="dealProgress"></div></div><button id="cutButton" style="width:100%">✂️ Prit dhe ndaj letrat</button></div></div><script>
+ 'use strict';
+const R={'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,J:11,Q:12,K:13,A:14,'2':15,BJ:16,RJ:17};
+const suits=['♠','♥','♦','♣'],names=['Ti','Mondi (AI)','Endri (AI)','Albi (AI)'];
+const el=id=>document.getElementById(id);
+let pendingDeal=null,cutBusy=false;
+let state=null,thinkTimer=null,clockTimer=null,exchangeTimer=null,soundOn=true,audioCtx=null,logs=[],animatedThrough=0,lastPileRound=0;
+const label=c=>c.r==='BJ'?'JOKER I ZI':c.r==='RJ'?'JOKER I KUQ':c.r+c.s;
+const rankName=c=>c.r==='BJ'?'Joker i zi':c.r==='RJ'?'Joker i kuq':c.r;
+function deck(){let a=[];for(let r of ['3','4','5','6','7','8','9','10','J','Q','K','A','2'])for(let s of suits)a.push({id:r+s,r,s,v:R[r]});a.push({id:'BJ',r:'BJ',s:'',v:16},{id:'RJ',r:'RJ',s:'',v:17});for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function compare(a,b){return a.v-b.v||suits.indexOf(a.s)-suits.indexOf(b.s)}
+function compareSuit(a,b){return suits.indexOf(a.s)-suits.indexOf(b.s)||a.v-b.v}
+
+function analyze(a){
+ if(!a.length)return null;
+ const n=a.length,v=a.map(x=>x.v).sort((x,y)=>x-y),max=v[n-1],same=v.every(x=>x===v[0]);
+ if(n===1)return {type:'single',power:max,n};
+ if(n===2&&same&&max<16)return {type:'pair',power:max,n};
+ if(n===3&&same&&max<16)return {type:'triple',power:max,n};
+ if(n===4&&same&&max<16)return {type:'bomb',power:max,n};
+ if(n>=5&&n<=13&&new Set(v).size===n){
+   // Shkalla A-2-3-4-5 lejohet si shkalla më e ulët (start=1).
+   // 2-3-4-5-6 dhe 10-J-Q-K-A janë gjithashtu të vlefshme.
+   // Nuk lejohet rrotullimi tjetër, p.sh. J-Q-K-A-2.
+   if(n===5&&[3,4,5,14,15].every(x=>v.includes(x))){
+     return {type:'straight',power:5,n,start:1};
+   }
+   const ordered=v.map(x=>x===15?2:x).sort((x,y)=>x-y);
+   if(ordered.every((x,i)=>x>=2&&x<=14&&(i===0||x===ordered[i-1]+1))){
+     return {type:'straight',power:ordered[n-1],n,start:ordered[0]};
+   }
+ }
+ return null;
+}
+function beats(a,b){
+ if(!a)return false;
+ if(!b)return true;
+ if(a.type==='bomb'&&b.type!=='bomb')return true;
+ if(a.type!==b.type||a.n!==b.n)return false;
+ if(a.type==='straight'){
+   // Kolori mund të kapet vetëm nga kolori i radhës, një shkallë më lart.
+   return a.start===b.start+1;
+ }
+ return a.power>b.power;
+}
+function playedDescription(cards,combo){
+ if(!combo||!cards.length)return '';
+ const n=cards.length;
+ if(combo.type==='single')return 'Letra në lojë: '+label(cards[0]);
+ if(combo.type==='pair')return 'Në lojë: Dy '+rankName(cards[0]);
+ if(combo.type==='triple')return 'Në lojë: Tre '+rankName(cards[0]);
+ if(combo.type==='bomb')return 'Në lojë: BOMBË – katër '+rankName(cards[0]);
+ if(combo.type==='straight'){
+  const names=Array.from({length:n},(_,i)=>Object.keys(R).find(k=>R[k]===(combo.start+i===2?15:combo.start+i)));
+  return 'Në lojë: Shkallë '+n+' letra ('+names.join('–')+')';
+ }
+ return 'Në lojë: '+cards.map(label).join(' ');
+}
+function playCardSound(n=1){if(!soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});for(let j=0;j<Math.min(n,5);j++){const count=1100,buffer=audioCtx.createBuffer(1,count,audioCtx.sampleRate),a=buffer.getChannelData(0);for(let k=0;k<count;k++)a[k]=(Math.random()*2-1)*Math.pow(1-k/count,2.5);const src=audioCtx.createBufferSource();src.buffer=buffer;const filter=audioCtx.createBiquadFilter();filter.type='bandpass';filter.frequency.value=850+(j%3)*165;filter.Q.value=.48;const gain=audioCtx.createGain(),at=audioCtx.currentTime+j*.055;gain.gain.setValueAtTime(.001,at);gain.gain.exponentialRampToValueAtTime(.085,at+.005);gain.gain.exponentialRampToValueAtTime(.001,at+.065);src.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);src.start(at);src.stop(at+.08)}}catch(e){}}
+function stopClock(){clearInterval(clockTimer);clearTimeout(thinkTimer);clockTimer=null;thinkTimer=null}
+function addlog(s){logs.unshift(s);logs=logs.slice(0,18);el('log').textContent='';for(const x of logs){const d=document.createElement('div');d.textContent='• '+x;el('log').appendChild(d)}}
+function notify(s){el('notice').textContent=s}
+function nextLiving(i){for(let t=1;t<=4;t++){let x=(i+t)%4;if(state.hands[x].length&&!state.finished.includes(x))return x}return i}
+function prepareCut(first=false){
+ stopClock();
+ const cutter=first?0:state.lastWinner;
+ pendingDeal={first,shuffled:deck(),cutter};
+ cutBusy=false;
+ el('cutOverlay').classList.remove('hidden');
+ el('cutDeck').classList.remove('cut');
+ el('cutDeck').classList.remove('hidden');
+ el('dealArena').classList.add('hidden');
+ el('cutRange').disabled=cutter!==0;
+ el('cutRange').parentElement.querySelector('label').style.display=cutter===0?'':'none';
+ el('cutRange').style.display=cutter===0?'':'none';
+ el('cutButton').disabled=cutter!==0;
+ el('cutButton').style.display=cutter===0?'':'none';
+ el('cutButton').textContent='✂️ Prit dhe ndaj letrat';
+ el('cutText').textContent=first?'Dora e parë: ti pret pakon.':(names[cutter]+' fitoi dorën e fundit dhe pret pakon.');
+ el('dealProgress').style.width='0%';
+ el('cutAmount').textContent=el('cutRange').value;
+ if(cutter!==0)setTimeout(()=>{if(pendingDeal&&!cutBusy)startCut(1+Math.floor(Math.random()*53))},1200);
+}
+el('cutRange').oninput=()=>el('cutAmount').textContent=el('cutRange').value;
+el('cutButton').onclick=()=>startCut(Number(el('cutRange').value));
+function startCut(n){
+ if(!pendingDeal||cutBusy)return;
+ cutBusy=true;
+ const d=pendingDeal.shuffled;
+ pendingDeal.shuffled=d.slice(n).concat(d.slice(0,n));
+ el('cutDeck').classList.add('cut');
+ el('cutRange').disabled=true;
+ el('cutButton').disabled=true;
+ el('cutButton').textContent='Po ndahen letrat…';
+ el('cutText').textContent=names[pendingDeal.cutter]+' preu pakon. Po ndahen letrat…';
+ setTimeout(startVisibleDeal,600);
+}
+function startVisibleDeal(){
+ if(!pendingDeal)return;
+ el('cutDeck').classList.add('hidden');
+ el('dealArena').classList.remove('hidden');
+ const arena=el('dealArena'),counts=[0,0,0,0];
+ const cutter=pendingDeal.cutter;
+ const firstSeat=(cutter+3)%4;
+ pendingDeal.dealOrder=Array.from({length:54},(_,i)=>(firstSeat+i)%4);
+ let dealt=0;
+ const targets=[[0,68],[-112,0],[0,-68],[112,0]];
+ function nextCard(){
+  if(!pendingDeal)return;
+  if(dealt===54){
+   const data=pendingDeal;pendingDeal=null;
+   setTimeout(()=>{el('cutOverlay').classList.add('hidden');deal(data.first,data.shuffled,data.dealOrder)},500);
+   return;
+  }
+  // Deal one card at a time clockwise; final card goes to cutter.
+  const seat=pendingDeal.dealOrder[dealt];
+  const fly=document.createElement('div');fly.className='deal-fly';
+  arena.appendChild(fly);
+  requestAnimationFrame(()=>{fly.style.transform='translate('+targets[seat][0]+'px,'+targets[seat][1]+'px) rotate('+((dealt%5-2)*7)+'deg)';fly.style.opacity='.2'});
+  counts[seat]++;
+  el('seat'+seat).textContent=names[seat].replace(' (AI)','')+' · '+counts[seat];
+  dealt++;
+  el('dealProgress').style.width=(dealt/54*100)+'%';
+  el('cutText').textContent='Po ndahen letrat: '+dealt+' / 54';
+  setTimeout(()=>fly.remove(),260);
+  setTimeout(nextCard,75);
+ }
+ nextCard();
+}
+function newGame(){stopClock();clearTimeout(exchangeTimer);exchangeTimer=null;logs=[];animatedThrough=0;state={hands:[[],[],[],[]],tableCards:[],scores:[0,0,0,0],turn:0,lead:0,top:null,topcards:[],pass:0,finished:[],selected:new Set(),round:1,champion:false,required:true,returnWinner:null,returnLoser:null,exchangePending:false,exchangeView:null,lastWinner:null,lastLoser:null,goal:21,clockLeft:45,turnEndsAt:0};el('next').style.display='none';prepareCut(true)}
+function deal(first=false,precutDeck=null,dealOrder=null){
+ stopClock();clearTimeout(exchangeTimer);exchangeTimer=null;
+ const d=precutDeck||deck();state.hands=[[],[],[],[]];
+ if(dealOrder){d.forEach((card,i)=>state.hands[dealOrder[i]].push(card))}
+ else{state.hands=[d.slice(0,14),d.slice(14,28),d.slice(28,41),d.slice(41,54)]}
+ state.hands.forEach(h=>h.sort(compare));state.top=null;state.topcards=[];state.tableCards=[];
+ animatedThrough=0;el('pile').innerHTML='';lastPileRound=state.round;
+ state.pass=0;state.finished=[];state.selected=new Set();state.required=first;
+ state.exchangePending=false;state.exchangeView=null;
+ // The FIRST hand starts with 3♠; subsequent hands are opened by the LAST-PLACE player.
+ const starter=first?state.hands.findIndex(h=>h.some(c=>c.id==='3♠')):state.lastLoser;
+ state.lead=starter;state.turn=starter;
+ if(first){addlog(`Dora ${state.round}: ${names[starter]} fillon me 3♠.`);render();schedule();return}
+ const loser=state.lastLoser,winner=state.lastWinner;
+ const loserHand=state.hands[loser],winnerHand=state.hands[winner];
+ // Legacy exception: no exchange if loser holds both jokers. The loser still opens the hand.
+ if(loserHand.some(c=>c.r==='BJ')&&loserHand.some(c=>c.r==='RJ')){
+  addlog(`Dora ${state.round}: ${names[loser]} ka dy Joker-at. Nuk bëhet shkëmbim; humbësi fillon.`);
+  notify(`${names[loser]} ka dy Joker-at: pa shkëmbim. ${names[loser]} nis dorën.`);
+  render();schedule();return;
+ }
+ const given=loserHand.slice().sort((a,b)=>b.v-a.v||compare(b,a))[0];
+ state.hands[loser]=loserHand.filter(c=>c.id!==given.id);
+ winnerHand.push(given);winnerHand.sort(compare);
+ state.exchangePending=true;state.returnWinner=winner;state.returnLoser=loser;
+ state.exchangeView={loser,winner,given,returned:null,phase:'given'};
+ addlog(`${names[loser]} vendos në tavolinë ${label(given)} për ${names[winner]}.`);
+ notify(`Shkëmbim i hapur: ${names[loser]} → ${names[winner]}: ${label(given)}.`);
+ render();playCardSound();
+ exchangeTimer=setTimeout(()=>{
+  exchangeTimer=null;
+  if(!state.exchangePending||state.exchangeView?.phase!=='given')return;
+  state.exchangeView.phase='choosing';
+  if(winner===0){
+   notify(`Të gjithë panë ${label(given)}. Tani zgjidh letrën që do t'ia kthesh ${names[loser]}.`);
+   render();
+  }else{
+   const returned=pickReturn(state.hands[winner]);
+   completeExchange(returned,loser,winner);
+  }
+ },1700);
+}
+function eligibleReturns(hand){let c=hand.filter(x=>x.v>=3&&x.v<=10);if(c.length)return c; c=hand.filter(x=>x.v===11||x.v===12);return c.length?c:hand.slice().sort(compare).slice(0,1)}
+function pickReturn(hand){return eligibleReturns(hand).slice().sort(compare)[0]}
+function completeExchange(card,loser,winner){
+ if(!state.exchangePending||state.exchangeView?.phase!=='choosing')return;
+ const allowed=eligibleReturns(state.hands[winner]);
+ if(!allowed.some(c=>c.id===card.id))return;
+ state.hands[winner]=state.hands[winner].filter(x=>x.id!==card.id);
+ state.hands[loser].push(card);state.hands[loser].sort(compare);state.hands[winner].sort(compare);
+ state.exchangeView.returned=card;state.exchangeView.phase='returned';
+ addlog(`${names[winner]} vendos në tavolinë ${label(card)} për ${names[loser]}.`);
+ notify(`Shkëmbim i hapur: ${names[winner]} → ${names[loser]}: ${label(card)}.`);
+ state.selected.clear();render();playCardSound();
+ clearTimeout(exchangeTimer);
+ exchangeTimer=setTimeout(()=>{
+  exchangeTimer=null;
+  if(!state.exchangePending||state.exchangeView?.phase!=='returned')return;
+  state.exchangePending=false;state.exchangeView=null;
+  addlog(`Shkëmbimi përfundoi. Dorën e nis humbësi: ${names[loser]}.`);
+  notify(`Shkëmbimi u pa nga të gjithë. ${names[loser]} e nis dorën.`);
+  render();schedule();
+ },2000);
+}
+function returnHuman(){
+ if(!state.exchangePending||state.exchangeView?.phase!=='choosing'||state.returnWinner!==0)return;
+ const opts=eligibleReturns(state.hands[0]),card=opts.find(c=>state.selected.has(c.id));
+ if(!card){notify('Zgjidh një nga letrat e lejuara për kthim.');return}
+ completeExchange(card,state.returnLoser,0);
+}
+function valid(cards){const a=analyze(cards);if(!a)return{ok:false,why:'Kombinim i pavlefshëm.'};if(state.required&&!cards.some(c=>c.id==='3♠'))return{ok:false,why:'Lëvizja e parë duhet të përmbajë 3♠.'};if(!beats(a,state.top))return{ok:false,why:'Duhet kombinim më i lartë ose bombë.'};return{ok:true,a}}
+function doPlay(player,cards){
+ if(state.champion||state.exchangePending||state.turn!==player||state.finished.includes(player))return false;
+ const v=valid(cards);if(!v.ok){if(player===0)notify(v.why);return false}
+ stopClock();const pileRect=el('pile').getBoundingClientRect(),playerRect=el('p'+player).getBoundingClientRect(),fromX=Math.round(playerRect.left+playerRect.width/2-(pileRect.left+pileRect.width/2)),fromY=Math.round(playerRect.top+playerRect.height/2-(pileRect.top+pileRect.height/2));
+ const ids=new Set(cards.map(c=>c.id));state.hands[player]=state.hands[player].filter(c=>!ids.has(c.id));state.top=v.a;state.topcards=cards;let pileStart=state.tableCards.length;
+ cards.forEach((card,i)=>{let index=pileStart+i,angle=index*2.39996,spread=Math.min(72,16+index*.7);state.tableCards.push({card,x:Math.round(Math.cos(angle)*spread+(Math.random()-.5)*12),y:Math.round(Math.sin(angle)*spread*.40+(Math.random()-.5)*12),rot:Math.round((Math.random()-.5)*68),fromX:fromX+(i-(cards.length-1)/2)*8,fromY,fromRot:((player%2)?-30:30),delay:i*62})});
+ playCardSound(cards.length);state.lead=player;state.pass=0;state.required=false;state.selected.clear();addlog(`${names[player]}: ${cards.map(label).join(' ')}.`);
+ if(!state.hands[player].length){state.finished.push(player);addlog(`${names[player]} mbaroi letrat – vendi ${state.finished.length}.`);if(state.finished.length===3){state.finished.push([0,1,2,3].find(i=>!state.finished.includes(i)));endRound();return true}}
+ advance();return true;
+}
+function doPass(player){
+ if(state.champion||state.exchangePending||state.turn!==player||!state.top)return false;
+ stopClock();state.pass++;state.selected.clear();addlog(`${names[player]}: Pass.`);
+ const alive=state.hands.filter(h=>h.length>0).length;
+ if(state.pass>=alive-1){state.top=null;state.topcards=[];state.pass=0;let l=state.lead;if(!state.hands[l].length)l=nextLiving(l);state.turn=l;addlog(`Kombinimi përfundoi. ${names[l]} fillon; letrat mbeten në tavolinë.`);render();schedule();return true}
+ advance();return true;
+}
+function advance(){state.turn=nextLiving(state.turn);render();schedule()}
+function endRound(){
+ stopClock();const pts=[0,0,0,0];state.finished.forEach((p,i)=>{pts[p]=3-i;state.scores[p]+=3-i});state.lastWinner=state.finished[0];state.lastLoser=state.finished[3];addlog(`Rezultati: ${names.map((n,i)=>n+' +'+pts[i]).join(', ')}.`);
+ const high=Math.max(...state.scores),winners=state.scores.map((s,i)=>s>=state.goal&&s===high?i:-1).filter(i=>i!==-1);
+ if(winners.length===1){state.champion=true;notify(`🏆 Kampionatin e fitoi ${names[winners[0]]} me ${high} pikë!`);el('next').style.display='none'}
+ else{if(winners.length>1){state.goal+=10;addlog(`Barazim në krye! Objektivi i kampionatit rritet në ${state.goal} pikë.`)}notify(`Dora përfundoi! ${names[state.finished[0]]} doli i pari.`);el('next').style.display='inline-block'}render();
+}
+function candidates(h){
+ let cand=[];h.forEach(c=>cand.push([c]));let groups={};h.forEach(c=>{(groups[c.v]??=[]).push(c)});
+ for(const g of Object.values(groups))for(const n of [2,3,4])if(g.length>=n)cand.push(g.slice(0,n));
+ const byValue={};h.forEach(c=>{if(c.v<=15&&!byValue[c.v])byValue[c.v]=c});
+ // Shkalla speciale A-2-3-4-5 (vetëm pesë letra).
+ if([14,15,3,4,5].every(v=>byValue[v])){
+   const special=[14,15,3,4,5].map(v=>byValue[v]);
+   if(analyze(special)?.type==='straight')cand.push(special);
+ }
+ for(let n=5;n<=Math.min(13,Object.keys(byValue).length);n++){
+  for(let start=2;start+n-1<=14;start++){
+   const seq=[];
+   for(let i=0;i<n;i++){const value=start+i===2?15:start+i;if(!byValue[value])break;seq.push(byValue[value])}
+   if(seq.length===n&&analyze(seq)?.type==='straight')cand.push(seq);
+  }
+ }
+ return cand.filter(a=>valid(a).ok).sort((a,b)=>{
+  const aa=analyze(a),bb=analyze(b);
+  // Reasonable cooperative-ish AI: shed as many low cards as possible, conserve bombs and jokers.
+  const cost=x=>{const m=analyze(x);return (m.type==='bomb'?1000:0)+(m.type==='single'&&m.power>=15?120:0)+m.power*2-x.length*17};
+  return cost(a)-cost(b);
+ });
+}
+// Strategic AI v1: evaluate the remaining hand, tempo, control cards and opponents' urgency.
+// It never reads the identities of other players' cards, only their counts and public scores.
+function allGroups(hand){
+ const by={};for(const c of hand)(by[c.v]??=[]).push(c);
+ const result=[];
+ for(const g of Object.values(by))for(let n=1;n<=Math.min(4,g.length);n++){
+  if(n===1){for(const c of g)result.push([c])}
+  else result.push(g.slice(0,n));
+ }
+ const values={};for(const c of hand)if(c.v<=15&&!values[c.v])values[c.v]=c;
+ for(let start=2;start<=14;start++)for(let n=5;start+n-1<=14;n++){
+  const seq=[];for(let k=0;k<n;k++){const v=start+k===2?15:start+k;if(!values[v])break;seq.push(values[v])}
+  if(seq.length===n)result.push(seq);
+ }
+ return result;
+}
+function handShape(hand){
+ // Small dynamic-programming search finds a low-cost decomposition into combinations.
+ // Search over card subsets, not opponent hands. Results are cached per decision.
+ if(!hand.length)return 0;
+ const combos=allGroups(hand),ids=hand.map(c=>c.id),index=new Map(ids.map((id,i)=>[id,i]));
+ const parts=[];
+ for(const cards of combos){
+  const info=analyze(cards);if(!info)continue;
+  let mask=0;for(const c of cards)mask|=1<<index.get(c.id);
+  let cost=1.6+cards.length*.12;
+  if(info.type==='single')cost+=info.power>=16?1.4:info.power===15?1.1:info.power>=13?.65:.35;
+  if(info.type==='pair')cost+=.2;
+  if(info.type==='triple')cost-=.3;
+  if(info.type==='straight')cost-=Math.min(1.4,cards.length*.17);
+  if(info.type==='bomb')cost-=.9;
+  parts.push({mask,cost});
+ }
+ const full=(1<<hand.length)-1,memo=new Map([[0,0]]);
+ function solve(mask){if(memo.has(mask))return memo.get(mask);
+  const bit=mask&-mask;let best=Infinity;
+  for(const part of parts)if((part.mask&bit)&&(part.mask&mask)===part.mask){
+   const score=part.cost+solve(mask^part.mask);if(score<best)best=score;
+  }
+  memo.set(mask,best);return best;
+ }
+ return solve(full);
+}
+function strategicBotChoice(player){
+ const hand=state.hands[player],options=candidates(hand);
+ if(!options.length)return null;
+ const otherCounts=state.hands.map((h,i)=>i===player||state.finished.includes(i)?99:h.length);
+ const threat=Math.min(...otherCounts),urgent=threat<=2,veryUrgent=threat===1;
+ const leadingOpponent=state.scores.reduce((best,score,i)=>i!==player&&score>state.scores[best]&&best!==player?i:best,player===0?1:0);
+ const targetIsThreat=state.lead!==player&&(state.hands[state.lead].length<=3||state.lead===leadingOpponent);
+ const baseShape=handShape(hand);
+ let best=null,bestScore=-Infinity;
+ for(const cards of options){
+  const combo=analyze(cards),chosen=new Set(cards.map(c=>c.id));
+  const rest=hand.filter(c=>!chosen.has(c.id));
+  const shape=handShape(rest);
+  let score=(baseShape-shape)*7+cards.length*1.65;
+  // Strong cards win control later; save them unless victory or a dangerous opponent demands it.
+  const strong=cards.filter(c=>c.v>=15).length;
+  score-=strong*(state.top?10.5:13);
+  if(combo.type==='bomb')score-=state.top&&state.top.type==='bomb'?3:14;
+  if(combo.type==='single'&&combo.power>=16)score-=11;
+  if(combo.type==='single'&&combo.power<=10)score+=5.5;
+  if(combo.type==='pair'&&combo.power<=10)score+=3;
+  if(combo.type==='triple'&&combo.power<=10)score+=3.5;
+  if(!state.top&&combo.power>=14&&rest.length>3)score-=7;
+  if(combo.type==='straight')score+=1.3;
+  if(combo.type==='triple')score+=.8;
+  if(!state.top){
+   score+=cards.length*.9;
+   if(combo.type==='single'&&hand.length>6)score-=1;
+  }else{
+   // Avoid wasting a winning card to take the lead unnecessarily.
+   if(state.lead===player)score-=12;
+   if(!urgent&&!targetIsThreat&&combo.power>=14)score-=9;
+   if(urgent)score+=5+cards.length*1.4;
+   if(veryUrgent)score+=8;
+   if(targetIsThreat)score+=4;
+  }
+  if(rest.length===0)score+=1000;
+  if(rest.length<=2)score+=9;
+  // Slight deterministic variation by current state avoids identical-looking bot play.
+  score+=((cards[0].v*7+player*11+state.round*3)%7)*.025;
+  if(score>bestScore){bestScore=score;best=cards}
+ }
+ if(state.top&&best){
+  // Pass is a genuine tactical choice, not a fallback only.
+  const lead=state.lead;
+  const danger=threat<=3||state.hands[lead].length<=3;
+  const passValue=danger?-5:state.hands[lead].length>=7?2.8:1;
+  if(bestScore<passValue)return null;
+ }
+ return best;
+}
+function bot(){
+ if(state.turn===0||state.champion||state.exchangePending)return;
+ const p=state.turn,choice=strategicBotChoice(p);
+ if(choice)doPlay(p,choice);
+ else if(state.top)doPass(p);
+ else{const card=state.hands[p].find(x=>x.id==='3♠')||state.hands[p][0];doPlay(p,[card])}
+}
+function timeoutMove(){
+ if(state.champion||state.exchangePending||state.turn!==0)return;
+ const a=candidates(state.hands[0]);notify('Koha përfundoi. Sistemi kryen lëvizjen automatike.');
+ if(state.top){doPass(0)}else if(a.length){doPlay(0,a[0])}else{doPlay(0,[state.hands[0][0]])}
+}
+function schedule(){
+ stopClock();if(state.champion||state.finished.length===4||state.exchangePending)return;
+ state.clockLeft=45;state.turnEndsAt=Date.now()+45000;updateClock();clockTimer=setInterval(updateClock,200);
+ if(state.turn!==0){notify(`${names[state.turn]} po mendon…`);thinkTimer=setTimeout(bot,700+Math.floor(Math.random()*600))}
+ else{notify(state.top?'Radha jote: hidh një kombinim më të lartë ose Pass.':'Radha jote: zgjidh letrat për të filluar.');}
+}
+function updateClock(){if(!state||state.champion||state.exchangePending)return;state.clockLeft=Math.max(0,Math.ceil((state.turnEndsAt-Date.now())/1000));el('clock').textContent=state.clockLeft+'s';el('timerfill').style.width=(Math.max(0,(state.turnEndsAt-Date.now())/45000)*100)+'%';if(state.clockLeft===0){stopClock();if(state.turn===0)timeoutMove();else bot()}}
+function jokerArt(red){
+ const main=red?'#c12c39':'#214c85',other=red?'#214c85':'#c12c39';
+ return `<svg class="joker-art" viewBox="0 0 64 76" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M11 35 Q7 12 17 8 Q26 23 31 7 Q39 20 48 7 Q60 19 53 36 L47 42 L16 42Z" fill="${main}" stroke="#c99e44" stroke-width="2"/><circle cx="17" cy="8" r="5" fill="#e4b954"/><circle cx="31" cy="7" r="5" fill="${other}"/><circle cx="48" cy="7" r="5" fill="#e4b954"/><ellipse cx="32" cy="42" rx="18" ry="21" fill="#f5d7b4" stroke="#a16d4d" stroke-width="2"/><path d="M15 39 Q22 30 28 38 M36 38 Q43 30 49 39" fill="none" stroke="${other}" stroke-width="3"/><circle cx="25" cy="42" r="2.5" fill="#24342e"/><circle cx="39" cy="42" r="2.5" fill="#24342e"/><path d="M26 51 Q32 57 39 51" fill="none" stroke="#a33b43" stroke-width="2.5" stroke-linecap="round"/><path d="M10 75 Q11 59 24 58 L32 68 L40 58 Q53 59 54 75" fill="${main}" stroke="#c99e44" stroke-width="2"/><path d="M24 58 L32 68 L40 58" fill="${other}"/></svg>`;
+}
+function cardMarkup(c,small=false){const joker=c.r==='BJ'||c.r==='RJ';return joker?`<span class="joker-title">JOKER</span>${jokerArt(c.r==='RJ')}<span class="joker-kind">${c.r==='RJ'?'I KUQ':'I ZI'}</span>`:`<span>${c.r}</span><span class="${small?'card-suit':'suit'}">${c.s}</span>`}
+// Reordering works with a finger on iPhone/Android and with a mouse on desktop.
+let cardDrag=null,suppressCardClick=false;
+function cleanCardDrag(){
+ const d=cardDrag;
+ if(!d)return;
+ window.removeEventListener('pointermove',moveCardDrag,true);
+ window.removeEventListener('pointerup',endCardDrag,true);
+ window.removeEventListener('pointercancel',cancelCardDrag,true);
+ window.removeEventListener('blur',abortCardDrag);
+ if(d.target)d.target.classList.remove('drop-target');
+ if(d.source?.isConnected)d.source.classList.remove('dragging');
+ d.ghost?.remove();
+ cardDrag=null;
+}
+function abortCardDrag(){cleanCardDrag()}
+function beginCardDrag(e,source,id){
+ if(!state||state.exchangePending||cardDrag||e.button!==0)return;
+ const rect=source.getBoundingClientRect();
+ cardDrag={id,source,startX:e.clientX,startY:e.clientY,rect,active:false,ghost:null,target:null,pointX:e.clientX,pointY:e.clientY};
+ // Global listeners remain active even when the game rerenders the hand mid-drag.
+ window.addEventListener('pointermove',moveCardDrag,true);
+ window.addEventListener('pointerup',endCardDrag,true);
+ window.addEventListener('pointercancel',cancelCardDrag,true);
+ window.addEventListener('blur',abortCardDrag);
+}
+function moveCardDrag(e){
+ const d=cardDrag;if(!d)return;
+ d.pointX=e.clientX;d.pointY=e.clientY;
+ const dx=e.clientX-d.startX,dy=e.clientY-d.startY;
+ if(!d.active&&Math.hypot(dx,dy)<9)return;
+ if(!d.active){
+  d.active=true;
+  d.ghost=d.source.cloneNode(true);
+  d.ghost.classList.remove('selected');d.ghost.classList.add('drag-ghost');
+  d.ghost.style.width=d.rect.width+'px';d.ghost.style.height=d.rect.height+'px';
+  document.body.appendChild(d.ghost);
+  d.source.classList.add('dragging');
+ }
+ if(e.cancelable)e.preventDefault();
+ d.ghost.style.left=(e.clientX-d.rect.width/2)+'px';
+ d.ghost.style.top=(e.clientY-d.rect.height/2)+'px';
+ const hand=el('hand'),cards=[...hand.querySelectorAll('.card')].filter(c=>c.dataset.cardId!==d.id);
+ let nearest=null,best=Infinity;
+ for(const c of cards){
+  const r=c.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+  const dist=Math.hypot(e.clientX-x,e.clientY-y);
+  if(dist<best){best=dist;nearest=c}
+ }
+ const handRect=hand.getBoundingClientRect();
+ const inHand=e.clientY>=handRect.top-85&&e.clientY<=handRect.bottom+85;
+ const target=inHand?nearest:null;
+ if(d.target&&d.target!==target)d.target.classList.remove('drop-target');
+ d.target=target;
+ if(d.target)d.target.classList.add('drop-target');
+}
+function finishCardDrag(e,cancel){
+ const d=cardDrag;if(!d)return;
+ const active=d.active,id=d.id,targetId=d.target?.dataset.cardId;
+ cleanCardDrag();
+ if(active){
+  suppressCardClick=true;
+  setTimeout(()=>{suppressCardClick=false},180);
+  if(!cancel&&targetId&&state&&!state.exchangePending){
+   const h=state.hands[0],from=h.findIndex(c=>c.id===id),to=h.findIndex(c=>c.id===targetId);
+   if(from>=0&&to>=0&&from!==to){
+    // Insert the dragged card at the target position, shifting intervening
+    // cards one place. Never swap the two cards.
+    const ordered=h.slice().sort((a,b)=>(stableHandSlots.get(a.id)??99)-(stableHandSlots.get(b.id)??99));
+    const occupied=ordered.map(c=>stableHandSlots.get(c.id)).sort((a,b)=>a-b);
+    const fromIndex=ordered.findIndex(c=>c.id===id);
+    const targetIndex=ordered.findIndex(c=>c.id===targetId);
+    const [moving]=ordered.splice(fromIndex,1);
+    ordered.splice(targetIndex,0,moving);
+    ordered.forEach((c,i)=>stableHandSlots.set(c.id,occupied[i]));
+    state.hands[0]=ordered;
+    render();
+   }
+  }
+ }
+}
+function endCardDrag(e){finishCardDrag(e,false)}
+function cancelCardDrag(e){finishCardDrag(e,true)}
+function render(){
+ if(cardDrag&&(!state||state.finished.includes(0)||state.champion||state.exchangePending))cleanCardDrag();
+ const s=state;for(let i=0;i<4;i++){const p=el('p'+i);p.classList.toggle('current',s.turn===i&&!s.champion&&!s.exchangePending);p.innerHTML=`<b>${names[i]}</b><div class="count">${s.finished.includes(i)?'Përfundoi':s.hands[i].length+' letra'} · ${s.scores[i]} pikë</div>`}
+ el('stats').innerHTML=`<span><b>Dora ${s.round}</b> · Kampionat ${s.goal} pikë</span><span>${names.map((n,i)=>n+': <b>'+s.scores[i]+'</b>').join(' · ')}</span>`;
+ el('turn').textContent=s.champion?'Kampionati përfundoi':s.exchangePending?'Shkëmbimi i letrave':`Në radhë: ${names[s.turn]}`;
+ const pile=el('pile');if(lastPileRound!==s.round){pile.innerHTML='';animatedThrough=0;lastPileRound=s.round}
+ // Only append new played cards: keeps existing DOM positions and avoids replaying animations.
+ for(let i=animatedThrough;i<s.tableCards.length;i++){const e=s.tableCards[i],c=e.card,joker=c.r==='BJ'||c.r==='RJ';const div=document.createElement('div');div.className=`thrown toss ${c.s==='♥'||c.s==='♦'||c.r==='RJ'?'red':''} ${joker?'joker':''}`;div.style.cssText=`--x:${e.x}px;--y:${e.y}px;--rot:${e.rot}deg;--from-x:${e.fromX}px;--from-y:${e.fromY}px;--from-rot:${e.fromRot}deg;--delay:${e.delay}ms;z-index:${i+1}`;div.title=label(c);div.innerHTML=cardMarkup(c,true);pile.appendChild(div)}animatedThrough=s.tableCards.length;
+ // Current play stays face-up in a readable row. Earlier plays slide back to the center pile.
+ const recent=s.topcards.length,begin=s.tableCards.length-recent;
+ [...pile.children].forEach((cardEl,i)=>{
+   const current=!!s.top&&i>=begin;
+   cardEl.classList.toggle('newest',current);
+   cardEl.classList.toggle('older',!current);
+   if(current){
+     const j=i-begin;
+     // Keep each card legible; wider straights use a compact, orderly row.
+     const step=recent<=5?46:recent<=8?34:Math.max(19,280/(recent-1));
+     const x=(j-(recent-1)/2)*step;
+     cardEl.style.setProperty('--x',x.toFixed(1)+'px');
+     cardEl.style.setProperty('--y','-5px');
+     cardEl.style.setProperty('--rot','0deg');
+     cardEl.style.zIndex=1000+j;
+   }else{
+     const e=s.tableCards[i];
+     // Completed combinations move back to the middle, slightly scattered.
+     const x=Math.round(e.x*.42),y=Math.round(e.y*.5+19);
+     cardEl.style.setProperty('--x',x+'px');
+     cardEl.style.setProperty('--y',y+'px');
+     cardEl.style.setProperty('--rot',e.rot+'deg');
+     cardEl.style.zIndex=i+1;
+   }
+ });
+ el('last').textContent=s.top?playedDescription(s.topcards,s.top)+' · '+names[s.lead]:'';
+ const hand=el('hand');const canChooseReturn=s.exchangePending&&s.exchangeView?.phase==='choosing'&&s.returnWinner===0;const legalReturns=canChooseReturn?new Set(eligibleReturns(s.hands[0]).map(c=>c.id)):null;
+ // Reuse existing card DOM nodes: a turn, a pass or a selection never rebuilds the hand.
+ const existing=new Map([...hand.querySelectorAll('.card')].map(b=>[b.dataset.cardId,b]));
+ const wanted=new Set(s.hands[0].map(c=>c.id));
+ for(const [id,b] of existing)if(!wanted.has(id)){b.remove();existing.delete(id)}
+ s.hands[0].forEach(c=>{
+  let b=existing.get(c.id);
+  if(!b){b=document.createElement('button');b.className='card';b.innerHTML=cardMarkup(c);b.title=label(c);b.dataset.cardId=c.id;b.draggable=false;b.onpointerdown=e=>beginCardDrag(e,b,c.id);b.onclick=()=>{if(suppressCardClick){suppressCardClick=false;return}if(state.selected.has(c.id))state.selected.delete(c.id);else{if(state.exchangePending)state.selected.clear();state.selected.add(c.id)}render()};hand.appendChild(b)}
+  b.classList.toggle('red',c.s==='♥'||c.s==='♦'||c.r==='RJ');b.classList.toggle('joker',c.r==='BJ'||c.r==='RJ');b.classList.toggle('selected',s.selected.has(c.id));
+  b.disabled=s.exchangePending&&(!legalReturns||!legalReturns.has(c.id));
+ });
+ layoutFan();
+ el('exchange').classList.toggle('show',canChooseReturn);
+ if(canChooseReturn){el('exchangeText').textContent=`${names[s.returnLoser]} të dha ${label(s.exchangeView.given)} hapur. Zgjidh 1 letër nga 3–10 (ose J/Q nëse s'ke 3–10).`}
+ const exchangeStage=el('exchangeStage');
+ if(s.exchangeView){
+  const x=s.exchangeView;
+  exchangeStage.classList.add('visible');
+  const showReturn=x.returned?`<div class="exchange-arrow">⇢</div><div class="exchange-move"><div class="exchange-person">${names[x.winner]} → ${names[x.loser]}</div><div class="exchange-card ${x.returned.s==='♥'||x.returned.s==='♦'||x.returned.r==='RJ'?'red':''}">${cardMarkup(x.returned,true)}</div></div>`:'';
+  exchangeStage.innerHTML=`<div class="exchange-title">🔁 SHKËMBIM I HAPUR — DORA ${s.round}</div><div class="exchange-pair"><div class="exchange-move"><div class="exchange-person">${names[x.loser]} → ${names[x.winner]}</div><div class="exchange-card ${x.given.s==='♥'||x.given.s==='♦'||x.given.r==='RJ'?'red':''}">${cardMarkup(x.given,true)}</div></div>${showReturn}</div><div class="exchange-bottom">${x.phase==='given'?'Të gjithë shohin letrën më të lartë të humbësit':x.phase==='choosing'?'Fituesi zgjedh letrën për kthim…':'Të dyja letrat u shfaqën • Humbësi nis dorën'}</div>`;
+ }else{exchangeStage.classList.remove('visible');exchangeStage.innerHTML=''}
+ const canAct=s.turn===0&&!s.champion&&!s.finished.includes(0)&&!s.exchangePending;
+ el('play').disabled=!canAct;el('pass').disabled=!canAct||!s.top;el('hint').disabled=!canAct;el('return').disabled=!canChooseReturn||s.selected.size!==1;
+ el('clock').textContent=s.exchangePending?'—':s.champion?'0s':s.clockLeft+'s';
+}
+
+// Every card receives fixed coordinates when dealt. Removed cards leave a gap.
+// Coordinates do not change after a move, a pass, a selection, or an AI action.
+let stableHandSlots=new Map(),stableHandRound=-1,stableHandGeometry=null;
+function layoutFan(){
+ const hand=el('hand'),cards=[...hand.querySelectorAll('.card')];
+ if(!cards.length)return;
+ if(stableHandRound!==state.round){stableHandRound=state.round;stableHandSlots.clear();stableHandGeometry=null}
+ const ids=cards.map(c=>c.dataset.cardId);
+ for(const id of [...stableHandSlots.keys()])if(!ids.includes(id))stableHandSlots.delete(id);
+ const used=new Set(stableHandSlots.values());
+ ids.forEach(id=>{if(!stableHandSlots.has(id)){
+  let slot=0;while(used.has(slot))slot++;
+  stableHandSlots.set(id,slot);used.add(slot);
+ }});
+ if(!stableHandGeometry){
+  const w=Math.max(260,hand.clientWidth),cardW=43;
+  const step=Math.min(37,(w-cardW-24)/13);
+  stableHandGeometry={start:Math.max(0,(w-(13*step+cardW))/2),step};
+ }
+ const {start,step}=stableHandGeometry;
+ cards.forEach(card=>{
+  const slot=stableHandSlots.get(card.dataset.cardId);
+  const t=(slot-6.5)/6.5,angle=t*7,drop=7*Math.pow(Math.abs(t),1.7)-3;
+  card.style.setProperty('--fx',(start+slot*step)+'px');
+  card.style.setProperty('--fy',drop+'px');
+  card.style.setProperty('--fa',angle+'deg');
+  card.style.setProperty('--fz',String(Math.round(slot*10)+100));
+ });
+}
+function gatherHand(){
+ if(!state||!state.hands[0].length)return;
+ const ordered=state.hands[0].slice().sort((a,b)=>(stableHandSlots.get(a.id)??99)-(stableHandSlots.get(b.id)??99));
+ const n=ordered.length;
+ // Use full available width for the remaining cards, rather than squeezing
+ // their ranks into the old 14-card spacing. No swapping and no hidden cards.
+ const hand=el('hand'),w=Math.max(260,hand.clientWidth);
+ const pxStep=n<=1?0:Math.min(40,(w-43-22)/(n-1));
+ // Fan geometry uses fourteen virtual slots, but can expand its pixel spacing.
+ const virtualStep=Math.max(1,pxStep);
+ stableHandGeometry={step:virtualStep,start:(w-(13*virtualStep+43))/2};
+ const center=6.5;
+ stableHandSlots.clear();
+ ordered.forEach((c,i)=>stableHandSlots.set(c.id,center+(i-(n-1)/2)));
+ state.hands[0]=ordered;
+ layoutFan();
+ notify('Letrat u afruan në mes. Mund t’i riorganizosh me gisht.');
+}
+el('gather').addEventListener('click',gatherHand);
+window.addEventListener('orientationchange',()=>{stableHandGeometry=null;setTimeout(()=>{if(state)layoutFan()},350)});
+
+el('play').onclick=()=>{const a=state.hands[0].filter(c=>state.selected.has(c.id));if(!a.length){notify('Zgjidh të paktën një letër.');return}doPlay(0,a)};
+el('pass').onclick=()=>doPass(0);
+el('hint').onclick=()=>{const a=candidates(state.hands[0]);state.selected=new Set((a[0]||[]).map(c=>c.id));render();notify(a.length?'Sugjerimi u përzgjodh. Shtyp «Hidh letrat».':'Nuk ke kombinim të vlefshëm; përdor Pass.')};
+el('return').onclick=returnHuman;
+el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'🔊 Zëri: ON':'🔇 Zëri: OFF';el('sound').setAttribute('aria-pressed',String(soundOn))};
+el('new').onclick=()=>{if(confirm('Të nisë një kampionat i ri?'))newGame()};
+el('next').onclick=()=>{state.round++;el('next').style.display='none';prepareCut(false)};
+newGame();
+
+</script></body></html>
